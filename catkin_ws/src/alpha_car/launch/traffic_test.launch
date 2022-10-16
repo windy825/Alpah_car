@@ -9,5 +9,5 @@
     <node pkg="alpha_car" type="acc.py" name="acc" args="/local_path"  output="screen" />
 
     <node pkg="rviz" type="rviz" name="rviz" args="-d $(find ssafy_2)/rviz/kcity_rviz.rviz" />
-
+    
 </launch>
