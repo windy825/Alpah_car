@@ -1,0 +1,13 @@
+<launch>
+    <node pkg="alpha_car" type="mgeo_pub.py" name="mgeo_pub"  />
+    <node pkg="alpha_car" type="gpsimu_parser.py" name="gpsimu_parser" />
+
+    <node pkg="alpha_car" type="mgeo_dijkstra_path_custom.py" name="mgeo_dijkstra_path"  />
+    <node pkg="alpha_car" type="tf_pub.py" name="tf"  />
+    <node pkg="alpha_car" type="local_path_pub.py" name="local_path_pub" />
+    
+    <node pkg="alpha_car" type="acc.py" name="acc" args="/local_path"  output="screen" />
+
+    <node pkg="rviz" type="rviz" name="rviz" args="-d $(find ssafy_2)/rviz/kcity_rviz.rviz" />
+
+</launch>
