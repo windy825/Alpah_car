@@ -72,15 +72,13 @@ for x, right_link in enumerate(next_link.get_all_right_links(), 1):
 
 ![제목 없음](https://user-images.githubusercontent.com/89068148/197391006-66aa4700-d234-4ac0-873c-ddd65bc99cf4.png)
 
-##### [시연 영상]()
+##### [시연 영상](https://github.com/windy825/Alpah_car/blob/master/%EC%8B%9C%EC%97%B0.mp4)
 
 사실 이번 자율주행은 어렵기도 하고, 난관이 정말 많아 매우 부족한 시연이었다.
 
-다시 봐도 정말 끔찍할 만큼 부족했지만, 괜찮다.
+다시 봐도 끔찍할 만큼 부족했지만, 괜찮다.
 
 지속적으로 성장하면서 개선하면 된다. 후퇴만 하지 말자! 라고 생각했다.
-
-
 
 <br>
 
