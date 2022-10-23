@@ -75,6 +75,10 @@ class Basic_firebase:
         self.weight_table = self.dijkstra_weight_table()
         #############################################################################
 
+        # 파이어 베이스에서 실시간으로 변화를 감지 하기 위한 코드
+        # 일정시간마다 새로운 데이터는 self.newData에 저장되고 
+        # prev와 비교한다.
+        # 그리고 다시 self.newData는 prev에 저장한다.
         prev = {
             'checkState' : True,
             'destination' : {
@@ -95,10 +99,9 @@ class Basic_firebase:
         }
 
 
-        # Create an Event for notifying main thread.
         callback_done = threading.Event()
 
-        # Create a callback on_snapshot function to capture changes
+        # 파이어스토어 실시간 변화감지
         def on_snapshot(doc_snapshot, changes, read_time):
             for change in changes:
                 if change.type.name == 'MODIFIED':
@@ -126,9 +129,8 @@ class Basic_firebase:
 
         rate = rospy.Rate(1) # 1hz
         while not rospy.is_shutdown():
-            # print(self.on_path != None, self.is_me)
-            if self.newData['checkState'] == True and self.on_path != None and self.is_me != None:
-                    if len(self.on_path) > 4:
+            if self.newData['checkState'] == True and self.on_path != None and self.is_me != None: # 값이 정상적이라면 
+                    if len(self.on_path) > 4: # 아직 목적지까지 남은 경로가 있다면
                     
                         start_x, start_y, _ = self.on_path[1]
                         end_x, end_y, _ = self.on_path[-2]
@@ -144,10 +146,10 @@ class Basic_firebase:
                                 'dis' : -1 if 0 < answer < 2 else int(answer),
                                 'time' : int(answer / 30000 * 60)
                             }
-                        db.collection(u'CurrentLocation').document(u'Ego_0').update(data333)
+                        db.collection(u'CurrentLocation').document(u'Ego_0').update(data333) # 현재 남은 시간과 거리 계산해서 서버에 데이터 저장
            
 
-            if prev != self.newData:
+            if prev != self.newData:  # 변화가 감지 되었다 ( = 택시의 목적지나, 주행 명령등이 감지 되었다)
                 newData = self.newData
                 print(newData)
                 print("prev != newData !!!!!!!!!!!!!!!!!!!!!!!")
@@ -157,7 +159,7 @@ class Basic_firebase:
                 des_x = float(newData['destination']['long'])
                 des_y = float(newData['destination']['lati'])
 
-                if newData['startingPoint']['long'] == "0" and newData['startingPoint']['lati'] == "0":
+                if newData['startingPoint']['long'] == "0" and newData['startingPoint']['lati'] == "0":  # 모바일에서 명령으로 위도경도에 0을 주면 택시위치를 출발지로 한다.
                     doc_ref2 = db.collection(u'CurrentLocation').get()[0].to_dict()
                     start_x = doc_ref2['long']
                     start_y = doc_ref2['lati']
@@ -207,11 +209,11 @@ class Basic_firebase:
 
 
                 # 4-2. start driving
-                if newData['checkState'] == True:
+                if newData['checkState'] == True:  # checkstate가 트루이면 주행 시작 명령이다. global_path를 publish 한다.
                     # global path publish
                     
                     self.global_path_pub.publish(self.global_path_msg)
-                else:
+                else: # 주행 시작 명령이 아니라면, 그냥 다익스트라 기반 계산된 경로만 뱉는다.
                     data333 = {'dis' : len(points_list)* 1.3}
                     db.collection(u'Distance').document(u'12가3456').set(data333)
                 prev = newData
